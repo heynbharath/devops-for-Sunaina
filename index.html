@@ -7,9 +7,9 @@
 <meta name="description" content="Interactive DevOps and Git MSE-1 learning lab. Learn the concepts, visualize the workflows, practice commands, and test yourself.">
 <style>
 :root{
-  --bg:#07111f;--panel:rgba(15,25,35,0.85);--card:rgba(20,30,45,0.85);--text:#ffffff;--muted:#c4d8eb;
-  --cyan:#00f0ff;--blue:#3399ff;--green:#00ff88;--yellow:#ffea00;--red:#ff4466;--purple:#b892ff;
-  --line:rgba(255,255,255,0.15);--shadow:0 18px 50px rgba(0,0,0,.4);--radius:20px;
+  --bg:#12050f;--panel:rgba(30,10,25,0.7);--card:rgba(40,15,35,0.6);--text:#fff0f5;--muted:#ffb6c1;
+  --cyan:#ff7eb3;--blue:#ffdf99;--green:#a1c4fd;--yellow:#fbc2eb;--red:#ff4e50;--purple:#c2e9fb;
+  --line:rgba(255,118,179,0.25);--shadow:0 18px 50px rgba(0,0,0,.6);--radius:20px;
 }
 * { box-sizing: border-box; } 
 html { scroll-behavior: smooth; }
@@ -20,13 +20,11 @@ html { scroll-behavior: smooth; }
 }
 body {
   margin: 0;
-  background: linear-gradient(-45deg, #1f005c, #5b0060, #870160, #ac255e, #ca485c, #e16b5c, #f39060, #ffb56b);
+  background: linear-gradient(-45deg, #2a0845, #6441A5, #ff0844, #ffb199, #12050f);
   background-size: 400% 400%;
-  animation: mesh 20s ease infinite;
+  animation: mesh 25s ease infinite;
   color: var(--text);
-  
   font: 16px/1.7 'Outfit', ui-sans-serif, system-ui, sans-serif;
-
   letter-spacing: 0.3px;
 }
 button, input { font: inherit; } 
@@ -54,9 +52,9 @@ h3 { margin: 0 0 10px; font-size: 20px; }
 .hero:after { content: ""; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,240,255,0.4) 0%, transparent 70%); right: -150px; top: -180px; filter: blur(40px); z-index: -1; }
 .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 .btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 16px; backdrop-filter: blur(5px); text-transform: uppercase; letter-spacing: 1px; }
-.btn.primary { background: linear-gradient(135deg, #ff007a, #7a00ff); border-color: transparent; box-shadow: 0 5px 20px rgba(122,0,255,0.5); }
+.btn.primary { background: linear-gradient(135deg, #ff0844, #ffb199); border-color: transparent; box-shadow: 0 5px 20px rgba(255,8,68,0.5); }
 .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.5); background: rgba(255,255,255,0.2); }
-.btn.primary:hover { background: linear-gradient(135deg, #ff2a8e, #8f2aff); box-shadow: 0 8px 25px rgba(255,0,122,0.6); }
+.btn.primary:hover { background: linear-gradient(135deg, #ff4e50, #f9d423); box-shadow: 0 8px 25px rgba(255,78,80,0.6); }
 section { margin-top: 70px; scroll-margin-top: 40px; }
 .section-head { display: flex; justify-content: space-between; gap: 15px; align-items: end; margin-bottom: 24px; }
 .section-head p { color: var(--muted); margin: 0; font-size: 17px; }
@@ -130,15 +128,15 @@ footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px;
 
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
-::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.4); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.7); }
+
+
 
 .kicker, .badge, th { font-family: 'Space Grotesk', monospace; letter-spacing: 2px; }
 .command { font-family: 'Space Grotesk', monospace; font-size: 16px; }
 
-h1 { font-weight: 900; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
 .hero { position: relative; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.2); }
-.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, rgba(0,240,255,0.3), transparent 30%); animation: rotate 10s linear infinite; z-index: -1; }
+
 @keyframes rotate { 100% { transform: rotate(360deg); } }
 .hero-content { background: rgba(10,15,30,0.85); backdrop-filter: blur(40px); padding: 50px; border-radius: 32px; height: 100%; width: 100%; }
 
@@ -147,12 +145,30 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff, #a5b4fc); -webk
 
 /* Floating particles */
 .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.particle { position: absolute; border-radius: 50%; background: white; opacity: 0.3; animation: floatUp linear infinite; }
+
 @keyframes floatUp { 
     0% { transform: translateY(100vh) scale(0); opacity: 0; }
     50% { opacity: 0.5; }
     100% { transform: translateY(-100px) scale(1); opacity: 0; }
 }
+
+
+::-webkit-scrollbar-thumb { background: rgba(255,126,179,0.5); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,126,179,0.8); }
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.3); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.3); }
+  70% { transform: scale(1); }
+}
+.heart { display: inline-block; animation: heartbeat 2s infinite; color: #ff0844; }
+
+.particle { position: absolute; border-radius: 50%; background: radial-gradient(circle, #ff7eb3, transparent); opacity: 0.4; animation: floatUp linear infinite; filter: blur(2px); }
+
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, rgba(255,126,179,0.4), transparent 30%); animation: rotate 12s linear infinite; z-index: -1; }
+h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -167,7 +183,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff, #a5b4fc); -webk
 <div class='particles' id='particles'></div>
 <div class="app">
 <aside class="sidebar">
-  <div class="logo">DEV<span>OPS</span> LAB<br><span style="font-size:12px;color:var(--cyan);font-weight:normal">for Sunaina Mohapatra 👩🏻‍💻</span></div>
+  <div class="logo" style="text-shadow: 0 0 15px rgba(255,126,179,0.8);">SUNAINA'S <span>LAB</span> <span class="heart">❤️</span><br><span style="font-size:12px;color:var(--muted);font-weight:normal;letter-spacing:1px;">BUILT WITH LOVE BY BHARATH</span></div>
   <div class="tag">MSE-1 • Understand, don't cram.</div>
   <nav class="nav">
     <button class="active" onclick="go('home')">🏠 <span>Start Here</span></button>
@@ -188,11 +204,11 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff, #a5b4fc); -webk
 
 <section id="home">
 <div class="hero">
-  <div class="hero-content">
-      <div class="kicker">DevOps + Git • MSE-1</div>
-      <h1>You've got this, <span style="color:var(--cyan); text-shadow: 0 0 20px var(--cyan);" class="typewriter">Sunaina! 🚀</span></h1>
-      <p class="lead">Good evening! Tomorrow is your MSE-1 for DevOps. Don't stress. This interactive lab is designed just for you to revise all 40 topics easily. Follow the story, click the moving parts, and crush that exam!</p>
-      <div class="actions"><button class="btn primary" onclick="go('story')">Start the story →</button><button class="btn" onclick="go('quiz')">Test me</button></div>
+  <div class="hero-content" style="background: rgba(30,10,25,0.7); border: 1px solid rgba(255,126,179,0.3);">
+      <div class="kicker" style="color: #ffdf99;">A SPECIAL GIFT FOR YOUR MSE-1</div>
+      <h1 style="font-size: clamp(40px, 6vw, 75px); letter-spacing: -1px;">I built this just for you, <br><span style="color:var(--cyan); text-shadow: 0 0 30px rgba(255,126,179,0.6);">Sunaina.</span> <span class="heart" style="font-size: 50px;">💖</span></h1>
+      <p class="lead" style="color: #ffb6c1; font-size: 22px; font-weight: 300;">I know how hard you've been working. So instead of you struggling with boring PDFs, I coded this entire interactive platform from scratch so you can study effortlessly tonight. You are brilliant, and you are going to absolutely crush this exam tomorrow. I believe in you.</p>
+      <div class="actions"><button class="btn primary" style="background: linear-gradient(135deg, #ff0844, #ffb199); box-shadow: 0 8px 30px rgba(255,8,68,0.5); font-size: 18px; padding: 14px 28px; border-radius: 99px;" onclick="go('story')">Let's study together ✨</button></div>
   </div>
 </div>
 <div class="grid" style="margin-top:18px">
@@ -371,7 +387,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff, #a5b4fc); -webk
 <p class="muted">If she can explain that sentence and expand every line, she understands the syllabus.</p>
 </div>
 </section>
-<footer>Built specially for Sunaina Mohapatra's MSE-1 Exam Prep ❤️ • You are going to ace it!</footer>
+<footer style="color: #ffb6c1; font-weight: 300; letter-spacing: 1px;">Hand-coded with endless love for Sunaina ❤️ • Good luck on your exam tomorrow, beautiful!</footer>
 </main>
 </div>
 
