@@ -115,8 +115,7 @@ td { font-size: 16px; }
 .topic:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: rgba(255,255,255,0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 .topic small { color: var(--muted); display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; }
 footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px; font-size: 15px; font-weight: 500; }
-@media(max-width:900px){
-  .sidebar { width: 80px; padding: 20px 10px; }
+
   .logo { font-size: 0; } .logo span { font-size: 20px; }
   .tag, .nav button span, .progress { display: none; }
   .nav button { font-size: 0; text-align: center; padding: 14px 0; }
@@ -124,8 +123,7 @@ footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px;
   .main { margin-left: 80px; width: calc(100% - 80px); padding: 30px 24px; }
   .grid, .grid2, .compare, .topic-list { grid-template-columns: 1fr; }
 }
-@media(max-width:600px){
-  .main { padding: 24px 16px; }
+
   .hero { padding: 30px 20px; }
   h1 { font-size: 42px; }
   .sidebar { width: 70px; }
@@ -179,8 +177,7 @@ footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px;
 h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 
-@media(max-width:600px){
-  .main { margin-left: 0 !important; width: 100% !important; padding: 100px 16px 24px !important; }
+
   .sidebar { width: 100% !important; height: 70px !important; bottom: auto !important; padding: 10px 16px !important; border-right: none !important; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; flex-direction: row; }
   .logo { font-size: 16px !important; margin: 0 !important; }
   .logo span.heart { font-size: 16px !important; }
@@ -196,6 +193,75 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
   .modalbox { padding: 20px !important; border-radius: 16px !important; }
   .hero-content { padding: 30px 20px !important; }
   h1 { font-size: 32px !important; }
+}
+
+
+@media(max-width: 900px) {
+  .sidebar { width: 80px; padding: 20px 10px; }
+  .logo { font-size: 0; } .logo span { font-size: 20px; }
+  .tag, .nav button span, .progress { display: none; }
+  .nav button { font-size: 0; text-align: center; padding: 14px 0; }
+  .nav button:first-letter { font-size: 22px; }
+  .main { margin-left: 80px; width: calc(100% - 80px); padding: 30px 24px; }
+  .grid, .grid2, .compare, .topic-list { grid-template-columns: 1fr; }
+}
+
+@media(max-width: 700px) {
+  /* Completely redesign for phones */
+  .sidebar { 
+      width: 100% !important; 
+      height: auto !important; 
+      bottom: auto !important; 
+      padding: 12px 10px 5px 10px !important; 
+      display: flex !important; 
+      flex-direction: column !important; 
+      gap: 10px !important;
+      border-right: none !important;
+      border-bottom: 1px solid rgba(255,126,179,0.3) !important;
+      background: rgba(15,5,12,0.98) !important; /* solid enough to hide content scrolling under it */
+  }
+  .logo { font-size: 18px !important; text-align: center; margin: 0 !important; }
+  .logo br { display: none; }
+  .logo span:last-child { display: none; } /* hide the "BY N BHARATH" text on mobile to save space */
+  
+  .nav { 
+      display: flex !important; 
+      flex-direction: row !important; 
+      overflow-x: auto !important; 
+      gap: 8px !important; 
+      padding-bottom: 10px !important;
+  }
+  .nav::-webkit-scrollbar { display: none; } /* hide scrollbar for nav */
+  
+  .nav button { 
+      padding: 8px 16px !important; 
+      flex-shrink: 0 !important; 
+      font-size: 14px !important; 
+      background: rgba(255,126,179,0.1) !important; 
+      border-radius: 20px !important; 
+      border: 1px solid rgba(255,126,179,0.2) !important;
+  }
+  .nav button span { display: inline !important; font-size: 14px !important; }
+  
+  .main { 
+      margin-left: 0 !important; 
+      width: 100% !important; 
+      padding: 130px 15px 30px !important; /* pad top to avoid header */
+  } 
+  
+  .top { display: none !important; } /* Hide giant badges and reset button */
+  
+  .hero-content { padding: 25px 15px !important; }
+  h1 { font-size: 32px !important; line-height: 1.1 !important; margin-bottom: 10px !important;}
+  .lead { font-size: 16px !important; line-height: 1.5 !important; margin-bottom: 20px !important;}
+  .hero { border-radius: 20px !important; }
+  
+  .card { padding: 16px !important; border-radius: 16px !important; }
+  
+  .connect-step { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .connect-step > div:first-child { width: 30px !important; height: 30px !important; font-size: 14px !important; }
+  
+  .modalbox { padding: 20px !important; border-radius: 16px !important; width: 95% !important; }
 }
 
 </style>
