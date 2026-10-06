@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DevOps + Git — Sunaina's MSE-1 Lab</title>
+
+<meta property="og:title" content="Sunaina's DevOps & Git Lab ❤️">
+<meta property="og:description" content="A custom-built interactive study guide to help you crush your MSE-1 exam. I believe in you!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heynbharath.github.io/devops-for-Sunaina/">
+<meta property="og:image" content="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop">
+<meta name="twitter:card" content="summary_large_image">
+
 <meta name="description" content="Interactive DevOps and Git MSE-1 learning lab. Learn the concepts, visualize the workflows, practice commands, and test yourself.">
 <style>
 :root{
@@ -170,6 +178,26 @@ footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px;
 .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, rgba(255,126,179,0.4), transparent 30%); animation: rotate 12s linear infinite; z-index: -1; }
 h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+
+@media(max-width:600px){
+  .main { margin-left: 0 !important; width: 100% !important; padding: 100px 16px 24px !important; }
+  .sidebar { width: 100% !important; height: 70px !important; bottom: auto !important; padding: 10px 16px !important; border-right: none !important; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; flex-direction: row; }
+  .logo { font-size: 16px !important; margin: 0 !important; }
+  .logo span.heart { font-size: 16px !important; }
+  .logo br { display: none; }
+  .logo span:last-child { display: none; }
+  .nav { display: flex !important; flex-direction: row !important; gap: 4px !important; overflow-x: auto; padding-bottom: 5px; }
+  .nav button { padding: 6px 12px !important; font-size: 12px !important; white-space: nowrap; }
+  .nav button span { display: inline !important; font-size: 12px !important; }
+  
+  .connect-step { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .connect-step > div:first-child { width: 30px !important; height: 30px !important; font-size: 14px !important; }
+  
+  .modalbox { padding: 20px !important; border-radius: 16px !important; }
+  .hero-content { padding: 30px 20px !important; }
+  h1 { font-size: 32px !important; }
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -320,7 +348,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
   <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
     
     <!-- Step 1 -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+    <div style="display: flex; gap: 20px; align-items: stretch;" class="connect-step">
       <div style="width: 40px; background: rgba(0,240,255,0.1); color: var(--cyan); border: 1px solid var(--cyan); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">1</div>
       <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--cyan);">
         <h3 style="color: var(--cyan); margin-bottom: 5px;">The Developer's Laptop (Git Local)</h3>
@@ -329,7 +357,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
     </div>
 
     <!-- Step 2 -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+    <div style="display: flex; gap: 20px; align-items: stretch;" class="connect-step">
       <div style="width: 40px; background: rgba(98,168,255,0.1); color: var(--blue); border: 1px solid var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">2</div>
       <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--blue);">
         <h3 style="color: var(--blue); margin-bottom: 5px;">Sharing with the Team (Git Remote)</h3>
@@ -338,7 +366,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
     </div>
 
     <!-- Step 3 -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+    <div style="display: flex; gap: 20px; align-items: stretch;" class="connect-step">
       <div style="width: 40px; background: rgba(255,234,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">3</div>
       <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--yellow);">
         <h3 style="color: var(--yellow); margin-bottom: 5px;">The Pipeline Triggers (Continuous Integration)</h3>
@@ -347,7 +375,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
     </div>
 
     <!-- Step 4 -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+    <div style="display: flex; gap: 20px; align-items: stretch;" class="connect-step">
       <div style="width: 40px; background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid var(--green); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">4</div>
       <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--green);">
         <h3 style="color: var(--green); margin-bottom: 5px;">Going to Production (Continuous Deployment)</h3>
@@ -356,7 +384,7 @@ h1 { font-weight: 900; background: linear-gradient(135deg, #fff0f5, #ffb199); -w
     </div>
 
     <!-- Step 5 -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+    <div style="display: flex; gap: 20px; align-items: stretch;" class="connect-step">
       <div style="width: 40px; background: rgba(255,68,102,0.1); color: var(--red); border: 1px solid var(--red); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">5</div>
       <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--red);">
         <h3 style="color: var(--red); margin-bottom: 5px;">Watching it Run (Monitoring & Feedback)</h3>
