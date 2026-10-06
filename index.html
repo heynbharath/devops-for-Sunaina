@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevOps + Git — Sunaina's MSE-1 Lab</title>
+<meta name="description" content="Interactive DevOps and Git MSE-1 learning lab. Learn the concepts, visualize the workflows, practice commands, and test yourself.">
+<style>
+:root{
+  --bg:#07111f;--panel:rgba(15,25,35,0.85);--card:rgba(20,30,45,0.85);--text:#ffffff;--muted:#c4d8eb;
+  --cyan:#00f0ff;--blue:#3399ff;--green:#00ff88;--yellow:#ffea00;--red:#ff4466;--purple:#b892ff;
+  --line:rgba(255,255,255,0.15);--shadow:0 18px 50px rgba(0,0,0,.4);--radius:20px;
+}
+* { box-sizing: border-box; } 
+html { scroll-behavior: smooth; }
+@keyframes mesh {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+body {
+  margin: 0;
+  background: linear-gradient(-45deg, #1f005c, #5b0060, #870160, #ac255e, #ca485c, #e16b5c, #f39060, #ffb56b);
+  background-size: 400% 400%;
+  animation: mesh 20s ease infinite;
+  color: var(--text);
+  font: 16px/1.7 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0.3px;
+}
+button, input { font: inherit; } 
+button { cursor: pointer; transition: all 0.2s ease; }
+a { color: inherit; text-decoration: none; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; padding: 24px 20px; background: rgba(10,15,25,0.85); backdrop-filter: blur(20px); border-right: 1px solid var(--line); z-index: 10; box-shadow: 5px 0 30px rgba(0,0,0,0.3); }
+.logo { font-weight: 900; font-size: 20px; letter-spacing: -.5px; margin-bottom: 4px; text-shadow: 0 0 10px var(--cyan); }
+.logo span { color: var(--cyan); }
+.tag { font-size: 13px; color: var(--muted); margin-bottom: 25px; font-weight: 500; }
+.nav { display: grid; gap: 8px; }
+.nav button { border: 1px solid transparent; background: transparent; color: var(--muted); text-align: left; padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 15px; }
+.nav button:hover, .nav button.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); transform: translateX(5px); }
+.progress { margin-top: 30px; padding: 16px; border: 1px solid var(--line); background: rgba(0,0,0,0.3); border-radius: 15px; }
+.bar { height: 10px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; margin-top: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green), var(--yellow)); width: 0; box-shadow: 0 0 10px var(--green); transition: width 0.5s ease; }
+.main { margin-left: 280px; width: calc(100% - 280px); max-width: 1300px; padding: 40px 50px 100px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 40px; }
+.badge { display: inline-flex; padding: 8px 14px; border: 1px solid var(--cyan); border-radius: 99px; color: #fff; font-weight: bold; font-size: 13px; background: rgba(0,240,255,0.2); box-shadow: 0 0 15px rgba(0,240,255,0.3); text-shadow: 0 0 5px var(--cyan); }
+h1 { font-size: clamp(38px, 5vw, 70px); line-height: 1.05; letter-spacing: -2px; margin: 10px 0 16px; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+h2 { font-size: 34px; line-height: 1.15; letter-spacing: -1px; margin: 0 0 14px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); } 
+h3 { margin: 0 0 10px; font-size: 20px; }
+.lead { color: #eef2f6; font-size: 20px; max-width: 800px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+.hero { padding: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 28px; background: rgba(10,15,30,0.7); backdrop-filter: blur(25px); box-shadow: var(--shadow), 0 0 40px rgba(255,255,255,0.1) inset; overflow: hidden; position: relative; }
+.hero:after { content: ""; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,240,255,0.4) 0%, transparent 70%); right: -150px; top: -180px; filter: blur(40px); z-index: -1; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 16px; backdrop-filter: blur(5px); text-transform: uppercase; letter-spacing: 1px; }
+.btn.primary { background: linear-gradient(135deg, #ff007a, #7a00ff); border-color: transparent; box-shadow: 0 5px 20px rgba(122,0,255,0.5); }
+.btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.5); background: rgba(255,255,255,0.2); }
+.btn.primary:hover { background: linear-gradient(135deg, #ff2a8e, #8f2aff); box-shadow: 0 8px 25px rgba(255,0,122,0.6); }
+section { margin-top: 70px; scroll-margin-top: 40px; }
+.section-head { display: flex; justify-content: space-between; gap: 15px; align-items: end; margin-bottom: 24px; }
+.section-head p { color: var(--muted); margin: 0; font-size: 17px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.card { background: var(--card); backdrop-filter: blur(15px); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); opacity: 0; transition: opacity 0.3s; }
+.card.click { transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer; }
+.card.click:hover { border-color: rgba(255,255,255,0.5); transform: translateY(-5px) scale(1.01); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+.card.click:hover::before { opacity: 1; }
+.kicker { font-size: 13px; color: var(--cyan); font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.muted { color: var(--muted); }
+.flow { display: flex; gap: 12px; align-items: center; overflow: auto; padding: 12px 4px 20px; scrollbar-width: thin; }
+.flow::-webkit-scrollbar { height: 8px; } .flow::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+.node { min-width: 120px; padding: 16px 12px; text-align: center; border-radius: 16px; background: rgba(0,0,0,0.4); border: 1px solid var(--line); font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; box-shadow: inset 0 2px 10px rgba(255,255,255,0.05); }
+.arrow { color: var(--yellow); font-weight: 900; font-size: 18px; text-shadow: 0 0 10px var(--yellow); }
+.callout { padding: 20px; border-left: 5px solid var(--cyan); background: rgba(0,0,0,0.4); border-radius: 0 18px 18px 0; margin: 20px 0; font-size: 17px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); backdrop-filter: blur(10px); }
+.callout.green { border-color: var(--green); } .callout.yellow { border-color: var(--yellow); } .callout.red { border-color: var(--red); }
+.tabs { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+.tab { padding: 10px 16px; border: 1px solid var(--line); background: rgba(0,0,0,0.3); color: var(--text); border-radius: 12px; font-weight: bold; }
+.tab:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.tab.active { color: #fff; border-color: var(--cyan); background: rgba(0,240,255,0.2); box-shadow: 0 0 15px rgba(0,240,255,0.3); }
+.hidden { display: none !important; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+.modal.open { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modalbox { width: min(800px, 100%); max-height: 90vh; overflow: auto; background: rgba(15,20,35,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 28px; padding: 34px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); position: relative; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.close { position: absolute; right: 24px; top: 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; padding: 0; }
+.close:hover { background: var(--red); border-color: var(--red); transform: rotate(90deg); }
+.compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.compare .card { min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
+.command { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); padding: 16px 20px; border-radius: 14px; color: #00ffaa; margin: 12px 0; overflow: auto; font-size: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { text-align: left; padding: 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--yellow); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { font-size: 16px; }
+.quiz { display: grid; gap: 20px; }
+.q { padding: 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 22px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+.options { display: grid; gap: 12px; margin-top: 16px; }
+.opt { border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; text-align: left; padding: 16px 20px; border-radius: 14px; font-size: 16px; font-weight: 500; transition: all 0.2s; }
+.opt:hover { background: rgba(255,255,255,0.15); transform: translateX(5px); }
+.opt.correct { border-color: var(--green); background: rgba(0,255,136,0.2); box-shadow: 0 0 15px rgba(0,255,136,0.3); }
+.opt.wrong { border-color: var(--red); background: rgba(255,68,102,0.2); box-shadow: 0 0 15px rgba(255,68,102,0.3); }
+.score { font-size: 30px; font-weight: 900; background: linear-gradient(90deg, #ff007a, #00f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.search { width: 100%; padding: 16px 20px; border-radius: 16px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 18px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3); transition: all 0.3s; }
+.search:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,240,255,0.2); }
+.topic-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.topic { padding: 16px 20px; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; gap: 15px; align-items: center; transition: all 0.2s; text-align: left; }
+.topic:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: rgba(255,255,255,0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.topic small { color: var(--muted); display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; }
+footer { text-align: center; color: rgba(255,255,255,0.6); padding: 60px 0 30px; font-size: 15px; font-weight: 500; }
+@media(max-width:900px){
+  .sidebar { width: 80px; padding: 20px 10px; }
+  .logo { font-size: 0; } .logo span { font-size: 20px; }
+  .tag, .nav button span, .progress { display: none; }
+  .nav button { font-size: 0; text-align: center; padding: 14px 0; }
+  .nav button:first-letter { font-size: 22px; }
+  .main { margin-left: 80px; width: calc(100% - 80px); padding: 30px 24px; }
+  .grid, .grid2, .compare, .topic-list { grid-template-columns: 1fr; }
+}
+@media(max-width:600px){
+  .main { padding: 24px 16px; }
+  .hero { padding: 30px 20px; }
+  h1 { font-size: 42px; }
+  .sidebar { width: 70px; }
+  .main { margin-left: 70px; width: calc(100% - 70px); }
+  .flow { gap: 8px; }
+  .node { min-width: 100px; font-size: 13px; padding: 12px 8px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">DEV<span>OPS</span> LAB<br><span style="font-size:12px;color:var(--cyan);font-weight:normal">for Sunaina Mohapatra 👩🏻‍💻</span></div>
+  <div class="tag">MSE-1 • Understand, don't cram.</div>
+  <nav class="nav">
+    <button class="active" onclick="go('home')">🏠 <span>Start Here</span></button>
+    <button onclick="go('story')">🔄 <span>Big Picture</span></button>
+    <button onclick="go('devops')">⚙️ <span>DevOps</span></button>
+    <button onclick="go('git')">🌿 <span>Git</span></button>
+    <button onclick="go('tools')">🧰 <span>Toolchain</span></button>
+    <button onclick="go('practice')">🧪 <span>Practice</span></button>
+    <button onclick="go('connect')">🔗 <span>Connect the Dots</span></button>
+    <button onclick="go('quiz')">🎯 <span>Quiz</span></button>
+    <button onclick="go('topics')">📚 <span>40 Topics</span></button>
+  </nav>
+  <div class="progress"><b>Your progress</b><div class="bar"><i id="progress"></i></div><small id="progressText" class="muted">0 / 40 explored</small></div>
+</aside>
+
+<main class="main">
+<div class="top"><div><span class="badge">INTERACTIVE LEARNING LAB</span></div><button class="btn" onclick="resetProgress()">Reset progress</button></div>
+
+<section id="home">
+<div class="hero">
+  <div class="kicker">DevOps + Git • MSE-1</div>
+  <h1>You've got this, <span style="color:var(--cyan)">Sunaina! 🚀</span></h1>
+  <p class="lead">Good evening! Tomorrow is your MSE-1 for DevOps. Don't stress. This interactive lab is designed just for you to revise all 40 topics easily. Follow the story, click the moving parts, and crush that exam!</p>
+  <div class="actions"><button class="btn primary" onclick="go('story')">Start the story →</button><button class="btn" onclick="go('quiz')">Test me</button></div>
+</div>
+<div class="grid" style="margin-top:18px">
+  <div class="card"><div class="kicker">01</div><h3>See the system</h3><p class="muted">Understand how Plan → Code → Test → Deploy → Monitor forms one loop.</p></div>
+  <div class="card"><div class="kicker">02</div><h3>Understand Git</h3><p class="muted">Stop memorising commands. See exactly where your code is at every step.</p></div>
+  <div class="card"><div class="kicker">03</div><h3>Think like the examiner</h3><p class="muted">Practice distinctions such as CI vs CD, fetch vs pull, reset vs revert.</p></div>
+</div>
+</section>
+
+<section id="story">
+<div class="section-head"><div><h2>The one story behind DevOps</h2><p>Imagine your team is shipping a food-delivery app.</p></div></div>
+<div class="card">
+<div class="flow">
+  <div class="node">PLAN</div><div class="arrow">→</div><div class="node">CODE</div><div class="arrow">→</div><div class="node">BUILD</div><div class="arrow">→</div><div class="node">TEST</div><div class="arrow">→</div><div class="node">QUALITY</div><div class="arrow">→</div><div class="node">RELEASE</div><div class="arrow">→</div><div class="node">DEPLOY</div><div class="arrow">→</div><div class="node">OPERATE</div><div class="arrow">→</div><div class="node">MONITOR</div>
+</div>
+<div class="callout"><b>The magic:</b> Monitoring produces feedback. Feedback changes the next plan. DevOps is therefore a continuous loop, not a one-time sequence.</div>
+<div class="grid2">
+<div class="card click" onclick="show('DevOps is the way the whole team works together — people, process and tools — to deliver and operate software quickly and reliably.','Think: Development + Operations stop behaving like separate islands.')"><h3>Why DevOps?</h3><p class="muted">Less waiting, fewer silos, safer releases, faster recovery.</p></div>
+<div class="card click" onclick="show('Git tracks changes to code. CI validates those changes. Delivery makes a release ready. Deployment sends it to production. Monitoring tells you what happened afterwards.','That is the chain you should see in your head during the exam.')"><h3>Why Git belongs here</h3><p class="muted">Git controls the change flowing through the pipeline.</p></div>
+</div>
+</div>
+</section>
+
+<section id="devops">
+<div class="section-head"><div><h2>DevOps concepts — click to understand</h2><p>Start with the idea, then attach the terminology.</p></div></div>
+<div class="grid">
+<div class="card click" onclick="show('Continuous Integration (CI)','Developers integrate code frequently into a shared repository and automated builds/tests validate the integration. Memory: integrate + validate.')"><div class="kicker">01</div><h3>Continuous Integration</h3><p class="muted">“Did my change integrate safely?”</p></div>
+<div class="card click" onclick="show('Continuous Delivery (CD)','Every change that passes the pipeline is kept in a releasable state. Production release may still require a human approval. Memory: ready to release.')"><div class="kicker">02</div><h3>Continuous Delivery</h3><p class="muted">“Is it ready to release?”</p></div>
+<div class="card click" onclick="show('Continuous Deployment','A qualifying change is automatically deployed to production without a separate manual release decision. Memory: automatically to production.')"><div class="kicker">03</div><h3>Continuous Deployment</h3><p class="muted">“Does it go to production automatically?”</p></div>
+<div class="card click" onclick="show('Automation','Automate repeatable work: builds, tests, deployments, infrastructure, configuration, security checks and monitoring. The goal is consistency and speed—not automation for its own sake.')"><div class="kicker">04</div><h3>Automation</h3><p class="muted">Machines do repeatable work.</p></div>
+<div class="card click" onclick="show('Quality Gates','A predefined pass/fail checkpoint. Example: tests pass, security scan passes, coverage threshold is met. The gate decides whether the pipeline may continue.')"><div class="kicker">05</div><h3>Quality Gates</h3><p class="muted">The bouncer at the pipeline door.</p></div>
+<div class="card click" onclick="show('DevOps Culture','Shared ownership, transparency, collaboration, blameless learning and feedback. A DevOps tool cannot repair a team that refuses to collaborate.')"><div class="kicker">06</div><h3>Culture</h3><p class="muted">People + ownership matter.</p></div>
+</div>
+<div class="card" style="margin-top:16px">
+<h3>CI vs Delivery vs Deployment</h3>
+<div class="compare">
+<div class="card"><div class="kicker">CI</div><h3>Integrate</h3><p>Code → build → test</p><b style="color:var(--cyan)">VALIDATE</b></div>
+<div class="card"><div class="kicker">DELIVERY</div><h3>Ready</h3><p>Validated software is releasable.</p><b style="color:var(--yellow)">READY</b></div>
+<div class="card"><div class="kicker">DEPLOYMENT</div><h3>Ship</h3><p>Validated change reaches production automatically.</p><b style="color:var(--green)">PRODUCTION</b></div>
+</div>
+</div>
+<div class="card" style="margin-top:16px">
+<h3>DORA: the four numbers</h3>
+<table><tr><th>Metric</th><th>Question in your head</th></tr>
+<tr><td>Deployment Frequency</td><td>How often do we successfully deploy?</td></tr>
+<tr><td>Lead Time for Changes</td><td>How long from change committed to production?</td></tr>
+<tr><td>Change Failure Rate</td><td>How often do changes cause failure/remediation?</td></tr>
+<tr><td>Time to Restore Service</td><td>How quickly can we recover?</td></tr></table>
+</div>
+</section>
+
+<section id="git">
+<div class="section-head"><div><h2>Git — see where the code lives</h2><p>The single most important Git mental model.</p></div></div>
+<div class="card">
+<div class="flow">
+<div class="node">Working<br>Directory</div><div class="arrow">git add →</div><div class="node">Staging<br>Area</div><div class="arrow">git commit →</div><div class="node">Local<br>Repository</div><div class="arrow">git push →</div><div class="node">Remote<br>GitHub/GitLab</div>
+</div>
+<div class="callout green"><b>Memory:</b> Edit → Select → Record → Share.</div>
+</div>
+<div class="grid2" style="margin-top:16px">
+<div class="card"><h3>Basic workflow</h3>
+<div class="command">git status</div><div class="command">git add .</div><div class="command">git commit -m "Add login"</div><div class="command">git push</div>
+<p class="muted">Status checks. Add stages. Commit records. Push shares.</p></div>
+<div class="card"><h3>Setup & inspection</h3>
+<div class="command">git config --global user.name "Name"</div><div class="command">git init</div><div class="command">git log</div><div class="command">git diff</div>
+<p class="muted">Configure identity, create repository, inspect history and differences.</p></div>
+</div>
+<div class="grid2" style="margin-top:16px">
+<div class="card"><h3>Fetch vs Pull</h3><div class="callout"><b>fetch</b> = download/inspect remote updates without integrating them into your current branch.</div><div class="callout green"><b>pull</b> = fetch + integrate into your current branch (commonly merge/rebase depending on configuration).</div></div>
+<div class="card"><h3>Reset vs Revert</h3><div class="callout yellow"><b>reset</b> = move branch/history pointer; can rewrite local history.</div><div class="callout green"><b>revert</b> = create a new commit that undoes an earlier commit; safer for shared history.</div></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>Branches + conflicts</h3>
+<div class="flow"><div class="node">main</div><div class="arrow">fork</div><div class="node">feature/login</div><div class="arrow">work + commit</div><div class="node">Pull Request</div><div class="arrow">review + CI</div><div class="node">merge</div></div>
+<div class="callout red"><b>Merge conflict:</b> Git cannot safely choose between competing changes. A human resolves the conflict, then stages and commits the resolution.</div>
+</div>
+</section>
+
+<section id="tools">
+<div class="section-head"><div><h2>Toolchain — learn the job, not the brand</h2><p>Tools become easy when you know what job they perform.</p></div></div>
+<div class="grid">
+<div class="card"><div class="kicker">VERSION CONTROL</div><h3>Git</h3><p class="muted">Track source-code history.</p></div>
+<div class="card"><div class="kicker">HOSTING</div><h3>GitHub / GitLab</h3><p class="muted">Remote repositories + collaboration.</p></div>
+<div class="card"><div class="kicker">CI/CD</div><h3>Jenkins / Actions / GitLab CI</h3><p class="muted">Automate pipeline stages.</p></div>
+<div class="card"><div class="kicker">BUILD</div><h3>Maven / Gradle</h3><p class="muted">Compile/package projects.</p></div>
+<div class="card"><div class="kicker">TEST</div><h3>JUnit / Selenium</h3><p class="muted">Automated testing.</p></div>
+<div class="card"><div class="kicker">CONTAINERS</div><h3>Docker</h3><p class="muted">Package application + dependencies.</p></div>
+<div class="card"><div class="kicker">ORCHESTRATION</div><h3>Kubernetes</h3><p class="muted">Manage containers at scale.</p></div>
+<div class="card"><div class="kicker">INFRASTRUCTURE</div><h3>Terraform</h3><p class="muted">Infrastructure as Code.</p></div>
+<div class="card"><div class="kicker">OBSERVABILITY</div><h3>Prometheus / Grafana</h3><p class="muted">Collect and visualize monitoring data.</p></div>
+</div>
+</section>
+
+<section id="practice">
+<div class="section-head"><div><h2>Practice lab</h2><p>Don't just read the workflow. Predict what happens next.</p></div></div>
+<div class="grid2">
+<div class="card"><h3>Scenario A — code change</h3><p>You edit <code>login.js</code>. What comes next?</p><div class="tabs"><button class="tab" onclick="show('Correct sequence','git status → git add → git commit → git push. You first inspect, then stage, record, and share.')">Reveal answer</button></div></div>
+<div class="card"><h3>Scenario B — remote changed</h3><p>You only want to inspect what another developer pushed. What command?</p><button class="tab" onclick="show('Answer: git fetch','Fetch downloads remote information without integrating it into your current branch. Pull goes further and integrates.')">Reveal</button></div>
+<div class="card"><h3>Scenario C — public bad commit</h3><p>You need to undo a commit already shared with teammates.</p><button class="tab" onclick="show('Answer: git revert','Revert creates a new commit that reverses the old change, preserving shared history.')">Reveal</button></div>
+<div class="card"><h3>Scenario D — deployment</h3><p>A code change passes automated checks and is automatically sent to production.</p><button class="tab" onclick="show('Continuous Deployment','The defining clue is automatic production deployment after validation.')">Reveal</button></div>
+</div>
+</section>
+
+
+<section id="connect">
+<div class="section-head"><div><h2>Connect the Dots (The Master Map)</h2><p>Exams test your ability to connect concepts. Here is how Git, DevOps, and Tools all fit into one single workflow.</p></div></div>
+
+<div style="background: rgba(10,15,30,0.7); backdrop-filter: blur(15px); border: 1px solid rgba(0,240,255,0.3); border-radius: 20px; padding: 30px; margin-top: 10px;">
+  
+  <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+    
+    <!-- Step 1 -->
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+      <div style="width: 40px; background: rgba(0,240,255,0.1); color: var(--cyan); border: 1px solid var(--cyan); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">1</div>
+      <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--cyan);">
+        <h3 style="color: var(--cyan); margin-bottom: 5px;">The Developer's Laptop (Git Local)</h3>
+        <p style="margin: 0; color: #c4d8eb;">You write code. You run <code style="color:#00ffaa;background:#000;padding:2px 6px;border-radius:4px;">git add</code> (Staging) and <code style="color:#00ffaa;background:#000;padding:2px 6px;border-radius:4px;">git commit</code> (Local Repo). <br><em>Concept:</em> Version Control. <em>Tool:</em> Git.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+      <div style="width: 40px; background: rgba(98,168,255,0.1); color: var(--blue); border: 1px solid var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">2</div>
+      <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--blue);">
+        <h3 style="color: var(--blue); margin-bottom: 5px;">Sharing with the Team (Git Remote)</h3>
+        <p style="margin: 0; color: #c4d8eb;">You run <code style="color:#00ffaa;background:#000;padding:2px 6px;border-radius:4px;">git push</code>. Your code leaves your laptop and goes to the cloud.<br><em>Concept:</em> Collaboration. <em>Tool:</em> GitHub / GitLab.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+      <div style="width: 40px; background: rgba(255,234,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">3</div>
+      <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--yellow);">
+        <h3 style="color: var(--yellow); margin-bottom: 5px;">The Pipeline Triggers (Continuous Integration)</h3>
+        <p style="margin: 0; color: #c4d8eb;">GitHub tells the CI server about your push. The CI server automatically downloads your code, builds it, and runs automated tests (Quality Gates).<br><em>Concept:</em> CI / Automation. <em>Tools:</em> Jenkins, Maven, JUnit.</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+      <div style="width: 40px; background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid var(--green); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">4</div>
+      <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--green);">
+        <h3 style="color: var(--green); margin-bottom: 5px;">Going to Production (Continuous Deployment)</h3>
+        <p style="margin: 0; color: #c4d8eb;">The tests passed! The code is packaged into a container and pushed to the live servers so customers can use it.<br><em>Concept:</em> CD / Orchestration. <em>Tools:</em> Docker, Kubernetes, Terraform.</p>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+      <div style="width: 40px; background: rgba(255,68,102,0.1); color: var(--red); border: 1px solid var(--red); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">5</div>
+      <div style="flex: 1; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; border-left: 4px solid var(--red);">
+        <h3 style="color: var(--red); margin-bottom: 5px;">Watching it Run (Monitoring & Feedback)</h3>
+        <p style="margin: 0; color: #c4d8eb;">The app is live. We watch the servers to make sure they don't crash. If they do, an alert is sent back to the developers at Step 1 to fix it.<br><em>Concept:</em> Feedback Loop / DORA metrics. <em>Tools:</em> Prometheus, Grafana.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="quiz">
+<div class="section-head"><div><h2>Exam mode</h2><p>Answer without looking. Then check yourself.</p></div><div class="score" id="score">0 / 8</div></div>
+<div id="quizBox" class="quiz"></div>
+<button class="btn primary" style="margin-top:18px" onclick="resetQuiz()">Try again</button>
+</section>
+
+<section id="topics">
+<div class="section-head"><div><h2>40-topic syllabus map</h2><p>Search a topic, click it, and mark it explored.</p></div></div>
+<input class="search" id="topicSearch" placeholder="Search: merge, DORA, git add, CI..." oninput="renderTopics()">
+<div id="topicList" class="topic-list" style="margin-top:14px"></div>
+</section>
+
+<section>
+<div class="card" style="text-align:center;padding:34px">
+<div class="kicker">THE WHOLE SUBJECT IN ONE SENTENCE</div>
+<h2>Git controls the change.<br>CI validates it.<br>Quality gates protect it.<br>Delivery prepares it.<br>Deployment ships it.<br>Monitoring watches it.<br>Feedback improves the next change.</h2>
+<p class="muted">If she can explain that sentence and expand every line, she understands the syllabus.</p>
+</div>
+</section>
+<footer>Built specially for Sunaina Mohapatra's MSE-1 Exam Prep ❤️ • You are going to ace it!</footer>
+</main>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+
+<script>
+const topics = [
+  [
+    "Introduction to DevOps",
+    "<p><strong>Definition:</strong> DevOps is a combination of cultural philosophies, practices, and tools that increases an organization's ability to deliver applications and services at high velocity. It is a portmanteau of 'Development' and 'Operations'.</p><p><strong>Why it exists:</strong> Historically, developers (Dev) focused on writing code quickly and adding new features, while IT operations (Ops) focused on stability and keeping servers running. This created a 'wall of confusion' where Devs threw code over the wall, and Ops struggled to deploy it safely. DevOps breaks down this silo.</p><ul><li><strong>Goal:</strong> Shorten the systems development life cycle and provide continuous delivery with high software quality.</li><li><strong>Key Pillars:</strong> Culture, Automation, Lean IT, Measurement, and Sharing (CALMS).</li></ul><p><strong>Exam Tip:</strong> Always mention that DevOps is NOT just a tool (like Jenkins or Docker). It is fundamentally a cultural shift backed by tooling.</p>"
+  ],
+  [
+    "Need and Benefits of DevOps",
+    "<p><strong>The Need:</strong> Without DevOps, companies face slow deployment cycles, high failure rates of new releases, finger-pointing between teams, and manual, error-prone deployment processes.</p><p><strong>Core Benefits:</strong></p><ul><li><strong>Speed & Agility:</strong> Move faster to innovate for customers and adapt to changing markets.</li><li><strong>Rapid Delivery:</strong> Increase the frequency and pace of releases so you can improve your product faster.</li><li><strong>Reliability:</strong> Ensure the quality of application updates and infrastructure changes so you can reliably deliver at a more rapid pace while maintaining a positive experience for end users. (Achieved via CI/CD).</li><li><strong>Scale:</strong> Operate and manage infrastructure and development processes at scale (via Automation and Infrastructure as Code).</li><li><strong>Improved Collaboration:</strong> Teams share responsibilities and combine their workflows, reducing inefficiencies.</li><li><strong>Security:</strong> Move quickly while retaining control and preserving compliance (DevSecOps).</li></ul>"
+  ],
+  [
+    "DevOps Culture and Collaboration",
+    "<p><strong>Definition:</strong> The cultural aspect is the most critical part of DevOps. It shifts the mindset from 'my job is done when the code is written' to 'my job is done when the code is running successfully in production and generating value.'</p><p><strong>Key Characteristics:</strong></p><ul><li><strong>Shared Responsibility:</strong> Developers don't just write code; they help support it in production. Ops teams don't just manage servers; they work with devs to automate deployments.</li><li><strong>Blameless Post-Mortems:</strong> When outages occur, the focus is on finding the systemic failure that allowed the error to happen, rather than firing the person who made the mistake.</li><li><strong>Transparency:</strong> Open communication across teams using tools like Slack, Jira, and shared monitoring dashboards.</li><li><strong>Continuous Learning:</strong> Fostering an environment where experimenting and failing fast is encouraged to drive innovation.</li></ul>"
+  ],
+  [
+    "DevOps Principles",
+    "<p><strong>The Principles:</strong> The core principles of DevOps can be remembered using the acronym <strong>CAMS</strong> or <strong>CALMS</strong>:</p><ul><li><strong>Culture:</strong> Embracing collaboration, shared responsibility, and blamelessness.</li><li><strong>Automation:</strong> Removing manual toil. Automating builds, testing, deployments, and infrastructure provisioning.</li><li><strong>Lean:</strong> Using lean principles to eliminate waste, optimize the whole system, and deliver value rapidly in small batches.</li><li><strong>Measurement:</strong> Tracking everything. If you can't measure it, you can't improve it. Using KPIs like deployment frequency and MTTR.</li><li><strong>Sharing:</strong> Sharing knowledge, tools, and processes across teams to break down silos.</li></ul><p><strong>Exam Tip:</strong> If asked about principles, write down CALMS and expand on each letter with a 1-line explanation.</p>"
+  ],
+  [
+    "DevOps Lifecycle",
+    "<p><strong>Definition:</strong> The DevOps lifecycle is a continuous, infinite loop that represents the phases software goes through from ideation to production and back to ideation based on user feedback.</p><p><strong>The Infinite Loop:</strong> Unlike the traditional Waterfall model which is linear (goes in one direction and ends), the DevOps lifecycle is cyclical. It emphasizes that software is never truly 'finished'.</p><p><strong>Why an infinite loop?</strong> Because once the software is Deployed and Operated, we Monitor it. The data we get from Monitoring (bugs, user behavior, performance metrics) directly feeds back into the Plan phase for the next version.</p><p><strong>Exam Tip:</strong> Draw an infinity symbol (\u221e) in the exam. Label the left side Dev (Plan, Code, Build, Test) and the right side Ops (Release, Deploy, Operate, Monitor).</p>"
+  ],
+  [
+    "DevOps Lifecycle Stages",
+    "<p><strong>The 8 Stages Explained:</strong></p><ol><li><strong>Plan:</strong> Define business value and requirements. (Tools: Jira, Trello).</li><li><strong>Code:</strong> Writing the software and pushing to version control. (Tools: Git, VS Code).</li><li><strong>Build:</strong> Compiling the code and downloading dependencies to create a runnable artifact. (Tools: Maven, Gradle, npm).</li><li><strong>Test:</strong> Running automated unit, integration, and security tests. (Tools: JUnit, Selenium, SonarQube).</li><li><strong>Release:</strong> Packaging the validated code so it is ready for deployment.</li><li><strong>Deploy:</strong> Pushing the release into the production environment. (Tools: Jenkins, Ansible, Docker).</li><li><strong>Operate:</strong> Managing the application in production and ensuring servers are running. (Tools: Kubernetes, Terraform).</li><li><strong>Monitor:</strong> Collecting metrics and logs to ensure the system is healthy and gathering user feedback. (Tools: Prometheus, Grafana, ELK).</li></ol>"
+  ],
+  [
+    "Continuous Integration (CI)",
+    "<p><strong>Definition:</strong> Continuous Integration is a software development practice where developers regularly merge their code changes into a central repository, after which automated builds and tests are run.</p><p><strong>The Process:</strong></p><ul><li>Developer commits code to Git.</li><li>The CI server (like Jenkins or GitHub Actions) detects the commit.</li><li>The CI server automatically pulls the code, compiles it, and runs unit tests.</li><li>If tests fail, the build is marked as 'broken' and the team is notified immediately to fix it.</li></ul><p><strong>Benefits:</strong> CI prevents 'Integration Hell'. By integrating code constantly (multiple times a day), bugs are found and fixed immediately while the context is fresh in the developer's mind, rather than weeks later during a massive merge.</p>"
+  ],
+  [
+    "Continuous Delivery (CD)",
+    "<p><strong>Definition:</strong> Continuous Delivery is a software engineering approach in which teams produce software in short cycles, ensuring that the software can be reliably released at any time.</p><p><strong>Key Concept:</strong> It is the logical next step after CI. Once the code is built and passes automated tests (CI), Continuous Delivery automatically deploys the code to a staging or testing environment that mimics production.</p><p><strong>The Human Element:</strong> In Continuous Delivery, the code is 100% ready to go to production. However, it does <strong>not</strong> go to production automatically. A human being (like a Release Manager or Product Owner) must push a button to authorize the final deployment to live customers.</p><p><strong>Exam Tip:</strong> Emphasize 'Release Readiness'. CD means the software is always in a deployable state.</p>"
+  ],
+  [
+    "Continuous Deployment",
+    "<p><strong>Definition:</strong> Continuous Deployment is the most advanced stage of the CI/CD pipeline. In this practice, every change that passes all stages of your production pipeline is released to your customers automatically. There is no human intervention.</p><p><strong>How it works:</strong> Developer writes code -> Pushes to Git -> CI server builds and tests it -> Quality gates check security and coverage -> The deployment tool automatically pushes it to production servers.</p><p><strong>Requirements:</strong> To achieve Continuous Deployment, you must have an incredibly robust, trustworthy automated testing suite and flawless monitoring. If your tests are bad, you will automatically deploy bugs to your customers.</p><p><strong>Benefits:</strong> Extremely fast feedback loop. Code written in the morning can be generating revenue in the afternoon.</p>"
+  ],
+  [
+    "CI vs CD vs Continuous Deployment",
+    "<p><strong>The Final Distinction (Memorize this for the exam):</strong></p><ul><li><strong>Continuous Integration (CI):</strong> Focuses on the Code & Build phases. Automatically merging, building, and testing code. <em>Goal: Ensure the code works together.</em></li><li><strong>Continuous Delivery (CD):</strong> Includes CI, plus deploying to a staging environment. The software is <em>ready</em> to be released at any moment. <em>Goal: Eliminate the technical stress of releasing. Requires a manual click to go to production.</em></li><li><strong>Continuous Deployment:</strong> Includes Delivery, but removes the manual click. Every passing change goes straight to production automatically. <em>Goal: Minimize time between writing code and customers using it.</em></li></ul>"
+  ],
+  [
+    "Automation in DevOps",
+    "<p><strong>Definition:</strong> Automation is the process of using technology to perform tasks with reduced human assistance. In DevOps, 'Automate Everything' is a core mantra.</p><p><strong>What do we automate?</strong></p><ul><li><strong>Code Builds & Testing:</strong> Triggered automatically on every commit.</li><li><strong>Infrastructure as Code (IaC):</strong> Instead of manually clicking through AWS to create servers, we write scripts (Terraform/Ansible) that automatically spin up servers.</li><li><strong>Deployments:</strong> Scripts automatically move code from staging to production.</li><li><strong>Monitoring Alerts:</strong> Systems automatically page engineers if CPU usage hits 90%.</li></ul><p><strong>Why Automate?</strong> Humans are bad at doing the same repetitive task perfectly 100 times. Machines do it perfectly every time. Automation reduces errors, increases speed, and frees up humans to do creative problem-solving.</p>"
+  ],
+  [
+    "DevOps Metrics and DORA Metrics",
+    "<p><strong>Definition:</strong> To know if DevOps is working, you must measure it. The industry standard is DORA (DevOps Research and Assessment) metrics, which categorize teams into Low, Medium, High, and Elite performers.</p><p><strong>The 4 Key DORA Metrics:</strong></p><ol><li><strong>Deployment Frequency (Throughput):</strong> How often an organization successfully releases to production. Elite teams deploy multiple times a day.</li><li><strong>Lead Time for Changes (Throughput):</strong> The amount of time it takes a commit to get into production. Elite teams take less than an hour.</li><li><strong>Change Failure Rate (Stability):</strong> The percentage of deployments causing a failure in production requiring remediation (e.g., hotfix, rollback). Elite teams are between 0-15%.</li><li><strong>Time to Restore Service (Stability):</strong> How long it takes an organization to recover from a failure in production (MTTR). Elite teams recover in less than an hour.</li></ol>"
+  ],
+  [
+    "Quality Gates",
+    "<p><strong>Definition:</strong> A Quality Gate is a milestone or checkpoint within a CI/CD pipeline where specific quality criteria must be met before the software can proceed to the next stage.</p><p><strong>Examples of Quality Gates:</strong></p><ul><li><strong>Code Coverage:</strong> The pipeline fails if unit tests cover less than 80% of the code.</li><li><strong>Security Scans:</strong> The pipeline fails if static analysis (SAST) detects a high-severity vulnerability like SQL injection.</li><li><strong>Performance Checks:</strong> The pipeline fails if load testing shows API response times exceed 200ms.</li></ul><p><strong>Exam Tip:</strong> Describe Quality Gates as the 'automated gatekeepers' that protect the production environment from bad code. They enforce standards objectively, removing human bias from code reviews.</p>"
+  ],
+  [
+    "DevOps Tools and Their Purpose",
+    "<p><strong>Exam Strategy:</strong> Don't just list tools; list their categories and what problem they solve.</p><ul><li><strong>Version Control (Git):</strong> Tracks who changed what code and when.</li><li><strong>Code Repositories (GitHub, GitLab, Bitbucket):</strong> Central hubs for hosting Git repos and collaborating via Pull Requests.</li><li><strong>CI/CD Servers (Jenkins, GitLab CI, GitHub Actions):</strong> The engine that runs the automated pipelines, executing scripts when code is pushed.</li><li><strong>Build Tools (Maven, Gradle, npm):</strong> Compiles raw source code into executable artifacts (like a .jar file).</li><li><strong>Configuration Management (Ansible, Chef, Puppet):</strong> Automates the installation of software and configuration of servers.</li><li><strong>Infrastructure as Code (Terraform, CloudFormation):</strong> Provisions cloud infrastructure (VPCs, EC2 instances) using code.</li><li><strong>Containerization (Docker):</strong> Packages an application and its dependencies into a standard unit for consistent deployment.</li><li><strong>Orchestration (Kubernetes):</strong> Manages thousands of Docker containers, handling scaling and self-healing.</li><li><strong>Monitoring (Prometheus, Grafana, ELK Stack):</strong> Collects logs and metrics to visualize system health.</li></ul>"
+  ],
+  [
+    "Monitoring and Feedback",
+    "<p><strong>Definition:</strong> Monitoring is the systematic collection, analysis, and use of information to ensure systems are operating as expected. Feedback is routing that information back to the developers.</p><p><strong>The Three Pillars of Observability:</strong></p><ol><li><strong>Metrics:</strong> Numeric data measured over time (e.g., CPU is at 85%, memory usage, requests per second).</li><li><strong>Logs:</strong> Immutable, timestamped records of discrete events (e.g., 'User logged in', 'Database connection failed at line 42').</li><li><strong>Traces:</strong> Following a single user's request as it travels through a complex network of microservices to find bottlenecks.</li></ol><p><strong>Why it matters:</strong> Without monitoring, you are flying blind. You only know your app is broken when angry customers call you. With proactive monitoring, you can fix issues before the customer even notices.</p>"
+  ],
+  [
+    "Introduction to Git",
+    "<p><strong>Definition:</strong> Git is a free and open-source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. It was created by Linus Torvalds in 2005 for Linux kernel development.</p><p><strong>Key Features:</strong></p><ul><li><strong>Distributed:</strong> Every developer has a full, independent local copy of the entire project history. You don't need a network connection to commit changes or view history.</li><li><strong>Branching:</strong> Git makes creating branches incredibly cheap and fast, encouraging non-linear development.</li><li><strong>Data Integrity:</strong> Everything in Git is checksummed (using SHA-1 hashes) before it is stored. It is impossible to change the contents of a file without Git knowing about it.</li></ul><p><strong>Exam Tip:</strong> Always mention that Git tracks <em>changes</em> to files (snapshots), not just storing multiple copies of the same file.</p>"
+  ],
+  [
+    "Version Control System (VCS)",
+    "<p><strong>Definition:</strong> A Version Control System is a software tool that helps teams manage changes to source code over time. It keeps track of every modification to the code in a special kind of database.</p><p><strong>Why do we need it?</strong></p><ul><li><strong>Collaboration:</strong> Prevents developers from overwriting each other's code when working on the same file.</li><li><strong>History & Reversion:</strong> If a new bug is introduced, VCS allows you to instantly roll back the code to an older, working version.</li><li><strong>Traceability:</strong> It answers: Who made this change? When did they make it? And most importantly, WHY did they make it (via the commit message).</li></ul><p><strong>Types of VCS:</strong> Centralized (like SVN, where there is one central server) and Distributed (like Git, where everyone has a full copy).</p>"
+  ],
+  [
+    "Git vs GitHub vs GitLab",
+    "<p><strong>This is a classic exam question!</strong> Ensure you can clearly distinguish them.</p><ul><li><strong>Git:</strong> The actual command-line tool and software installed on your local laptop. It is the engine that does the version controlling. It works entirely offline.</li><li><strong>GitHub:</strong> A for-profit company (owned by Microsoft) that provides a cloud-based hosting service for Git repositories. It provides a visual interface, issue tracking, and Pull Requests to make collaborating with Git easier over the internet.</li><li><strong>GitLab:</strong> Similar to GitHub, it is a web-based Git repository manager, but it heavily emphasizes built-in CI/CD pipelines and can be self-hosted on a company's own private servers.</li></ul><p><strong>Analogy:</strong> Git is to GitHub what video recording is to YouTube. Git is the tool; GitHub is the platform where you upload and share the results.</p>"
+  ],
+  [
+    "Git Repository",
+    "<p><strong>Definition:</strong> A repository (or 'repo') is the most basic element of Git. It's a folder that contains all of your project files, as well as the entire version history of those files.</p><p><strong>The .git folder:</strong> When you initialize a repository, Git creates a hidden directory called <code>.git</code>. This folder is the actual database where Git stores all the snapshots, commits, branches, and tags. If you delete the <code>.git</code> folder, your project becomes a normal, un-tracked folder again and all history is lost.</p><p><strong>Types of Repositories:</strong></p><ul><li><strong>Local Repository:</strong> The repository residing on your personal computer.</li><li><strong>Remote Repository:</strong> The repository hosted on a server or cloud service (like GitHub) used to share code with others.</li></ul>"
+  ],
+  [
+    "Working Directory, Staging Area and Repository",
+    "<p><strong>The Three Trees (Crucial Mental Model):</strong></p><ol><li><strong>Working Directory:</strong> This is your current workbench. It contains the actual files you see and edit on your computer's hard drive right now.</li><li><strong>Staging Area (The Index):</strong> A hidden file that acts as a 'waiting room' or a 'loading dock'. When you are ready to make a commit, you selectively pick which modified files from your Working Directory should be grouped into the next snapshot. You do this using <code>git add</code>.</li><li><strong>Local Repository (HEAD):</strong> The database where Git permanently stores the snapshots you committed from the Staging Area. You move things here using <code>git commit</code>.</li></ol><p><strong>Exam Tip:</strong> Draw three boxes. Arrow from Box 1 to Box 2 is 'git add'. Arrow from Box 2 to Box 3 is 'git commit'.</p>"
+  ],
+  [
+    "Basic Git Workflow",
+    "<p><strong>The Daily Sequence:</strong> This is exactly what a developer types every day.</p><ol><li><strong>Modify files</strong> in your working directory.</li><li>Run <strong><code>git status</code></strong> to review what you changed.</li><li>Run <strong><code>git add [filename]</code></strong> (or <code>git add .</code>) to move the changes to the Staging Area.</li><li>Run <strong><code>git commit -m \"Description of changes\"</code></strong> to permanently record the staged changes as a snapshot in your Local Repository.</li><li>Run <strong><code>git push origin main</code></strong> to upload those local commits to the remote server (GitHub) so your team can see them.</li></ol>"
+  ],
+  [
+    "Git Configuration",
+    "<p><strong>Why configure?</strong> Git relies heavily on accountability. Every commit must be stamped with the name and email of the author. If you don't configure this, Git won't let you commit.</p><p><strong>Commands:</strong></p><ul><li><code>git config --global user.name \"Sunaina Mohapatra\"</code></li><li><code>git config --global user.email \"sunaina@example.com\"</code></li></ul><p><strong>Levels of Config:</strong></p><ul><li><strong>--system:</strong> Applies to all users on the computer.</li><li><strong>--global:</strong> Applies to your specific user account (most common).</li><li><strong>--local:</strong> Applies only to the specific repository you are currently in.</li></ul>"
+  ],
+  [
+    "git init",
+    "<p><strong>Definition:</strong> <code>git init</code> is a one-time command you use during the initial setup of a new repository. Executing this command creates a new subdirectory named <code>.git</code> that houses all of your necessary repository files \u2014 a Git repository skeleton.</p><p><strong>Usage:</strong> Open a terminal, navigate to your project folder, and type <code>git init</code>. Your folder is now a local Git repository. At this point, nothing in your project is tracked yet until you use <code>git add</code>.</p>"
+  ],
+  [
+    "git status",
+    "<p><strong>Definition:</strong> <code>git status</code> is your compass. It displays the state of the working directory and the staging area.</p><p><strong>What it tells you:</strong></p><ul><li>Which branch you are currently on.</li><li>Whether your branch is ahead or behind the remote branch.</li><li><strong>Untracked files:</strong> Brand new files Git has never seen before.</li><li><strong>Modified files (not staged):</strong> Tracked files you've edited but haven't added to the staging area yet.</li><li><strong>Changes to be committed:</strong> Files currently sitting in the staging area waiting for a <code>git commit</code>.</li></ul><p><strong>Exam Tip:</strong> Mention that <code>git status</code> does NOT show commit history (that is <code>git log</code>). It only shows the CURRENT state.</p>"
+  ],
+  [
+    "git add",
+    "<p><strong>Definition:</strong> The <code>git add</code> command adds a change in the working directory to the staging area. It tells Git that you want to include updates to a particular file in the next commit.</p><p><strong>Variants:</strong></p><ul><li><code>git add index.html</code>: Stages a single specific file.</li><li><code>git add .</code> (dot): Stages ALL new, modified, and deleted files in the current directory and subdirectories.</li><li><code>git add -p</code>: (Patch mode) Allows you to interactively review changes chunk by chunk and decide whether to stage them. (Advanced but highly professional!).</li></ul><p><strong>Key Concept:</strong> <code>git add</code> does not affect the repository history in any way; changes are not recorded until you run <code>git commit</code>.</p>"
+  ],
+  [
+    "git commit",
+    "<p><strong>Definition:</strong> The <code>git commit</code> command captures a snapshot of the project's currently staged changes. Committed snapshots can be thought of as 'safe' versions of a project\u2014Git will never change them unless you explicitly ask it to.</p><p><strong>The Commit Message:</strong> Every commit requires a message. Good commit messages are imperative and clear. E.g., <code>git commit -m \"Fix login button bug\"</code>.</p><p><strong>What is inside a commit?</strong> Under the hood, a commit contains:</p><ul><li>A unique SHA-1 hash (e.g., <code>a3f89b1</code>) to identify it.</li><li>The author's name and timestamp.</li><li>A pointer to the parent commit(s).</li><li>A snapshot of the actual file tree.</li></ul>"
+  ],
+  [
+    "git log",
+    "<p><strong>Definition:</strong> <code>git log</code> lets you view the chronological commit history for a repository. It allows you to see who made a commit, when they made it, the commit message, and the commit hash.</p><p><strong>Useful Flags:</strong></p><ul><li><code>git log --oneline</code>: Condenses each commit to a single line showing just the hash and the message. Great for a quick overview.</li><li><code>git log --graph</code>: Draws a text-based graphical representation of the commit history on the left hand side, showing branch merges.</li><li><code>git log -p</code>: Shows the actual code differences (patches) introduced in each commit.</li></ul>"
+  ],
+  [
+    "git clone",
+    "<p><strong>Definition:</strong> <code>git clone</code> is a command for downloading an existing Git repository from a remote server (like GitHub) to your local machine.</p><p><strong>What it does exactly:</strong></p><ol><li>Creates a new directory named after the repo.</li><li>Initializes a <code>.git</code> folder inside it.</li><li>Downloads all the data for that repository (every branch, every commit in history).</li><li>Checks out a working copy of the latest version of the default branch (usually `main`).</li><li>Sets up a remote connection called <code>origin</code> pointing back to the URL you cloned from.</li></ol>"
+  ],
+  [
+    "git push",
+    "<p><strong>Definition:</strong> <code>git push</code> is used to upload local repository content to a remote repository. Pushing is how you transfer commits from your local repository to a remote repo (like GitHub).</p><p><strong>Syntax:</strong> <code>git push [remote-name] [branch-name]</code> (e.g., <code>git push origin main</code>).</p><p><strong>The Rule of Push:</strong> You can only push if your local branch is up-to-date with the remote branch. If your teammate pushed code to GitHub while you were working, GitHub will reject your push. You must <code>git pull</code> their changes, merge them with yours, and then <code>git push</code> the combined result.</p>"
+  ],
+  [
+    "git pull",
+    "<p><strong>Definition:</strong> The <code>git pull</code> command is used to fetch and download content from a remote repository and immediately update the local repository to match that content.</p><p><strong>Under the hood:</strong> <code>git pull</code> is actually a combination of two commands run one after the other:</p><ol><li><strong><code>git fetch</code>:</strong> Downloads the data from the remote server.</li><li><strong><code>git merge</code>:</strong> Immediately attempts to merge the downloaded data into your current working branch.</li></ol><p><strong>Risk:</strong> Because it automatically merges, it can sometimes trigger unexpected merge conflicts directly in your working directory.</p>"
+  ],
+  [
+    "git fetch",
+    "<p><strong>Definition:</strong> <code>git fetch</code> downloads commits, files, and refs from a remote repository into your local repo, <strong>but does not integrate them into your working files.</strong></p><p><strong>Why use fetch instead of pull?</strong> Fetch is the safe operation. It allows you to see what everyone else has been working on and review their code (using <code>git log</code> or <code>git diff</code>) before you decide to merge their work into your own branch. It updates your local copy of the remote branches (e.g., <code>origin/main</code>), but leaves your actual <code>main</code> branch alone until you explicitly run a merge.</p>"
+  ],
+  [
+    "Git Branches",
+    "<p><strong>Definition:</strong> A branch in Git is simply a lightweight movable pointer to a specific commit. Branching allows you to diverge from the main line of development and continue to do work without messing with that main line.</p><p><strong>Why use branches?</strong></p><ul><li><strong>Isolation:</strong> You can work on an experimental feature or a risky bug fix in isolation. If it goes wrong, you can just delete the branch. The main codebase is unaffected.</li><li><strong>Parallel Development:</strong> Multiple developers can work on the same repository simultaneously on their own branches, entirely unaware of each other until it's time to merge.</li></ul><p><strong>Exam Tip:</strong> Mention that creating branches in Git is nearly instantaneous and takes almost zero disk space, which is why branching is highly encouraged in Git workflows.</p>"
+  ],
+  [
+    "Branch Creation and Switching",
+    "<p><strong>Creating a branch:</strong> Use <code>git branch new-feature</code>. This creates a new pointer at your current commit, but it does NOT switch you to that branch.</p><p><strong>Switching branches:</strong> Use <code>git checkout new-feature</code> (or the newer command <code>git switch new-feature</code>). This updates your working directory to look exactly like the files in that branch.</p><p><strong>Warning:</strong> Before switching branches, you generally want to have a clean working directory (commit or stash your changes), otherwise Git might prevent you from switching to avoid losing uncommitted work.</p>"
+  ],
+  [
+    "Git Merge",
+    "<p><strong>Definition:</strong> Merging is Git's way of putting a forked history back together again. The <code>git merge</code> command lets you take the independent lines of development created by <code>git branch</code> and integrate them into a single branch.</p><p><strong>How to do it:</strong></p><ol><li>Switch to the branch you want to receive the changes (e.g., <code>git checkout main</code>).</li><li>Run the merge command targeting the branch with the new code (e.g., <code>git merge feature/login</code>).</li></ol><p><strong>Fast-Forward vs 3-Way Merge:</strong> If `main` hasn't changed since you created your feature, Git just moves the pointer forward (Fast-Forward). If both branches have new commits, Git creates a new special 'merge commit' that ties both histories together.</p>"
+  ],
+  [
+    "Merge Conflicts",
+    "<p><strong>Definition:</strong> A merge conflict occurs when Git cannot automatically resolve differences in code between two commits. This usually happens when two developers change the exact same lines in a file, or if one developer deletes a file while another modifies it.</p><p><strong>How to resolve it:</strong></p><ul><li>Git stops the merge process and marks the files as 'conflicted' in your working directory.</li><li>You must open the files in a text editor. Git injects conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; branch-name</code>) highlighting the competing changes.</li><li>You manually edit the file to keep the code you want, delete the conflict markers, save the file.</li><li>Finally, run <code>git add</code> on the resolved file and <code>git commit</code> to finalize the merge.</li></ul>"
+  ],
+  [
+    ".gitignore",
+    "<p><strong>Definition:</strong> <code>.gitignore</code> is a plain text file placed in the root of your repository that contains a list of file patterns that Git should completely ignore. Ignored files will not show up in <code>git status</code> and cannot be accidentally added via <code>git add .</code></p><p><strong>What belongs in .gitignore?</strong></p><ul><li><strong>Secrets:</strong> API keys, passwords, `.env` files. (CRITICAL for security).</li><li><strong>Compiled code:</strong> `.class`, `.jar`, `.exe`, or `node_modules/` folders (because they can be regenerated from source).</li><li><strong>System files:</strong> Mac's `.DS_Store` or Windows `Thumbs.db`.</li><li><strong>Logs:</strong> Locally generated `.log` files.</li></ul>"
+  ],
+  [
+    "git diff",
+    "<p><strong>Definition:</strong> <code>git diff</code> is a command-line utility that takes two input data sets and outputs the changes between them. It shows exactly which lines were added, modified, or deleted.</p><p><strong>Common Uses:</strong></p><ul><li><code>git diff</code>: Shows unstaged changes in your working directory compared to the staging area. (What have I changed but not yet staged?)</li><li><code>git diff --staged</code>: Shows changes in the staging area compared to the last commit. (What am I about to commit?)</li><li><code>git diff branchA branchB</code>: Compares the tips of two different branches.</li></ul><p><strong>Exam Tip:</strong> It is the best tool for reviewing your own work before you commit.</p>"
+  ],
+  [
+    "git reset vs git revert",
+    "<p><strong>This is a critical distinction for exams! Both are used to undo changes, but they do it very differently.</strong></p><ul><li><strong>git revert:</strong> This is the SAFE way to undo. It creates a brand <strong>new</strong> commit that contains the exact inverse changes of the bad commit. The old bad commit stays in history, and a new 'undo' commit is added on top. <em>Use this if the bad commit has already been pushed to GitHub and shared with others.</em></li><li><strong>git reset:</strong> This is the DANGEROUS way to undo. It literally moves the branch pointer backward in time, rewriting history and erasing commits as if they never happened. <em>Use this ONLY for local commits on your personal machine that have not been pushed to GitHub yet.</em> If you reset shared history, you will break your teammates' repositories.</li></ul>"
+  ],
+  [
+    "Fork and Pull Request",
+    "<p><strong>Definition:</strong> These are not core Git commands, but rather features provided by platforms like GitHub/GitLab.</p><p><strong>Fork:</strong> A fork is a personal, server-side copy of someone else's repository. You use it when you want to contribute to an open-source project where you don't have write access. You fork their repo, clone your fork, make changes, and push to your fork.</p><p><strong>Pull Request (PR):</strong> Once your changes are in your fork (or your own branch), you open a Pull Request. This is a formal notification to the original repository owners saying, 'I have made some changes. Please review them and pull them into your main branch.' PRs are where code reviews happen, CI tests run, and discussions take place before merging.</p>"
+  ],
+  [
+    "GitHub/GitLab Collaboration Workflow",
+    "<p><strong>The Industry Standard Workflow (Feature Branch Workflow):</strong></p><ol><li><strong>Pull:</strong> <code>git pull origin main</code> to ensure your local main is up to date.</li><li><strong>Branch:</strong> <code>git checkout -b feature/new-login</code> to isolate your work.</li><li><strong>Work:</strong> Write code, <code>git add</code>, and <code>git commit</code>.</li><li><strong>Push:</strong> <code>git push origin feature/new-login</code> to upload your branch to GitHub.</li><li><strong>Pull Request:</strong> Go to GitHub and open a Pull Request against the main branch.</li><li><strong>Review & Automate:</strong> Teammates review the code. CI/CD runs automated tests against the PR.</li><li><strong>Merge:</strong> Once approved and tests pass, a maintainer clicks 'Merge'. The branch is merged into main and deployed.</li></ol>"
+  ]
+];
+let explored=JSON.parse(localStorage.getItem('devopsExplored')||'[]');
+function save(){localStorage.setItem('devopsExplored',JSON.stringify(explored));updateProgress()}
+function updateProgress(){let n=explored.length;document.getElementById('progress').style.width=(n/40*100)+'%';document.getElementById('progressText').textContent=n+' / 40 explored'}
+function mark(i){if(!explored.includes(i)){explored.push(i);save(); if(explored.length===40) confetti({particleCount: 300, spread: 120, origin: { y: 0.5 }});}}
+function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));let map={home:0,story:1,devops:2,git:3,tools:4,practice:5,connect:6,quiz:7,topics:8};document.querySelectorAll('.nav button')[map[id]||0]?.classList.add('active')}
+function show(title,body){document.getElementById('modalContent').innerHTML='<div class="kicker">UNDERSTAND</div><h2>'+title+'</h2><div class="lead" style="text-align: left; max-height: 50vh; overflow-y: auto; padding-right: 15px;">'+body+'</div>';document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function resetProgress(){explored=[];save();renderTopics()}
+function renderTopics(){let q=(document.getElementById('topicSearch').value||'').toLowerCase();let box=document.getElementById('topicList');box.innerHTML='';topics.forEach((t,i)=>{if(q&&!t[0].toLowerCase().includes(q)&&!t[1].toLowerCase().includes(q))return;let el=document.createElement('button');el.className='topic';el.style.color='white';el.innerHTML='<span><b>'+String(i+1).padStart(2,'0')+' · '+t[0]+'</b><br><small>'+t[1]+'</small></span><span>'+ (explored.includes(i)?'✓':'○')+'</span>';el.onclick=()=>{mark(i);show(t[0],t[1]);renderTopics()};box.appendChild(el)})}
+const questions=[
+["What is the main idea of DevOps?",["Only automation","Unite development and operations for fast, reliable delivery","Only cloud computing","Only Git"],1],
+["Which best describes CI?",["Automatic production deployment","Keeping software ready to release","Frequent integration with automated build/test","Monitoring production"],2],
+["Which is the key clue for Continuous Deployment?",["A human approves every release","Automatic production deployment","Only unit tests","Git branches"],1],
+["What does git add do?",["Create a repository","Stage changes","Create a remote","Undo a commit"],1],
+["What does git commit do?",["Send code to GitHub","Record staged changes locally","Download remote changes","Create a branch"],1],
+["What is git fetch?",["Fetch + integrate automatically","Download remote updates without integrating into current branch","Delete remote changes","Create a PR"],1],
+["Which is safer for undoing a shared commit?",["git reset","git revert","git init","git diff"],1],
+["What is a quality gate?",["A Git branch","A predefined pass/fail checkpoint","A cloud provider","A monitoring dashboard"],1]
+];
+let answers={};
+function renderQuiz(){let box=document.getElementById('quizBox');box.innerHTML='';questions.forEach((q,qi)=>{let d=document.createElement('div');d.className='q';d.innerHTML='<b>'+(qi+1)+'. '+q[0]+'</b>';let opts=document.createElement('div');opts.className='options';q[1].forEach((o,oi)=>{let b=document.createElement('button');b.className='opt';b.textContent=o;b.onclick=()=>{answers[qi]=oi;Array.from(opts.children).forEach(x=>x.classList.remove('correct','wrong'));if(oi===q[2]) { b.classList.add('correct'); confetti({particleCount: 50, spread: 60, origin: { y: 0.8 }}); } else { b.classList.add('wrong'); }let sc = Object.entries(answers).filter(([k,v])=>questions[k][2]===v).length;document.getElementById('score').textContent = sc + ' / 8';if(sc === 8) { confetti({particleCount: 200, spread: 100, origin: { y: 0.5 }}); }};opts.appendChild(b)});d.appendChild(opts);box.appendChild(d)})}
+function resetQuiz(){answers={};renderQuiz();document.getElementById('score').textContent='0 / 8'}
+renderTopics();renderQuiz();updateProgress();
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+</body>
+</html>
